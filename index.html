@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billionaire Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div id="app" class="max-w-md mx-auto min-h-screen bg-white shadow-lg">
+        <div class="bg-black p-8 text-white text-center rounded-b-[40px] shadow-xl">
+            <h1 class="text-3xl font-black tracking-tighter italic">BILLIONAIRE SHOP</h1>
+            <p class="text-xs uppercase tracking-widest opacity-70 mt-1">Premium Digital Services</p>
+        </div>
+
+        <div id="auth-screen" class="p-8">
+            <div class="text-center mt-6">
+                <div class="inline-block p-4 bg-gray-100 rounded-full mb-4">
+                    <i class="fas fa-crown text-4xl text-yellow-500"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800">Welcome to the Club</h2>
+                <p class="text-gray-500 text-sm">Enter details to enter the shop</p>
+            </div>
+            
+            <div class="mt-10 space-y-4">
+                <input id="reg-name" type="text" placeholder="Full Name" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black transition-all">
+                <input id="reg-phone" type="number" placeholder="WhatsApp Number" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black transition-all">
+                <button onclick="handleRegister()" class="w-full bg-black text-white font-bold p-5 rounded-2xl shadow-lg active:scale-95 transition-transform mt-4">
+                    ENTER SHOP
+                </button>
+            </div>
+        </div>
+
+        <div id="main-dashboard" class="hidden p-6 animate-fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-2xl">Available Deals</h3>
+                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">LIVE</span>
+            </div>
+            
+            <div id="items-list" class="space-y-4">
+                <div class="p-5 border border-gray-100 rounded-3xl bg-gray-50 flex justify-between items-center group active:bg-gray-100 transition-colors">
+                    <div>
+                        <span class="block font-black text-lg">1GB DATA</span>
+                        <span class="text-gray-400 text-xs uppercase font-bold">Valid 30 Days</span>
+                    </div>
+                    <button class="bg-black text-white px-6 py-3 rounded-2xl font-bold text-sm">₵2.50</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+        // CONFIGURATION - MAKE SURE THIS MATCHES YOUR FIREBASE SCREEN
+        const firebaseConfig = {
+            apiKey: "PASTE_YOUR_API_KEY_HERE",
+            authDomain: "billionaire-shop.firebaseapp.com",
+            projectId: "billionaire-shop",
+            storageBucket: "billionaire-shop.appspot.com",
+            messagingSenderId: "54429686398",
+            appId: "PASTE_YOUR_APP_ID_HERE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.handleRegister = async () => {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            if(!name || !phone) return alert("Please fill in all details");
+
+            try {
+                // Saves the customer to your Firebase
+                await addDoc(collection(db, "customers"), { name, phone, joined: new Date() });
+                
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('main-dashboard').classList.remove('hidden');
+                alert("Welcome, Billionaire " + name + "!");
+            } catch (e) { 
+                alert("Connection Error. Check your Firebase settings."); 
+            }
+        };
+    </script>
+</body>
+</html>
 
